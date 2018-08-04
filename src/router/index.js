@@ -70,7 +70,7 @@ export const asyncRouterMap = [
       path: 'code',
       component: _import('console/code'),
       name: 'console_code',
-      meta: { title: '码表', icon: 'component', noCache: true }
+      meta: { title: '字典', icon: 'component', noCache: true }
     }]
   },
   { path: '*', redirect: '/404', hidden: true }
