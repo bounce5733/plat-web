@@ -25,7 +25,7 @@
 
       <div class="tips">
         <span>账号 : admin</span>
-        <span>密码 : 123</span>
+        <span>密码 : 1231</span>
       </div>
     </el-form>
 
