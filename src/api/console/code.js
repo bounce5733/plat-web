@@ -32,7 +32,7 @@ export function addCode(data) {
 
 export function removeCode(code) {
   return request({
-    url: CONSOLE_API_BASE + '/codes' + code,
+    url: CONSOLE_API_BASE + '/codes/' + code,
     method: 'delete'
   })
 }

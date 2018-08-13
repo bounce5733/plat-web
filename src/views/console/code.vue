@@ -1,53 +1,62 @@
 <template>
-<div class="dashboard-editor-container">
-  <!--操作表单-->
-  <el-row>
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-form @submit.native.prevent :inline="true">
-        <el-form-item>
-          <el-button type="primary" size="small" @click="openCodeAdd" icon="el-icon-plus">码表</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="small" :disabled="codes.length === 0" @click="openItemAdd" icon="el-icon-plus">项目</el-button>
-        </el-form-item>
-      </el-form>
-    </el-col>
-  </el-row>
-  <!--卡片界面-->
-  <el-tabs v-model="activeTab" type="border-card" @tab-click="tabClick" closable @tab-remove="removeCode">
-      <el-tab-pane v-for="code in codes" :label="code.name" :name="code.code" :key="code.code">
-          <el-table :data="code.items" highlight-current-row border style="width: 100%;">
-            <el-table-column align="center" label="操作" width="120">
-              <template slot-scope="scope">
-                <el-button-group>
-                  <el-button type="primary" @click="openItemEdit(scope.$index, scope.row)" size="small" icon="el-icon-edit" ></el-button>
-                  <el-button type="danger" @click="removeItem(scope.$index, scope.row)" size="small" icon="el-icon-delete" ></el-button>
-                </el-button-group>
-              </template>
-            </el-table-column>
-            <el-table-column prop="showName" label="名称" width="300">
-            </el-table-column>
-            <el-table-column prop="sort" label="排序" width="100">
-            </el-table-column>
+  <div class="app-container">
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-form @submit.native.prevent :inline="true">
+          <el-form-item>
+            <el-button type="primary" size="small" @click="openCodeAdd">新增</el-button>
+          </el-form-item>
+        </el-form>
+        <el-table :data="codes" @row-click="showItem" highlight-current-row stripe border style="width: 100%;">
+          <el-table-column label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button-group>
+                <el-button type="danger" size="small" icon="el-icon-delete" @click="removeCode(scope.row.code)"></el-button>
+              </el-button-group>
+            </template>
+          </el-table-column>
+          <el-table-column prop="code" label="编码" width="160" sortable></el-table-column>
+          <el-table-column prop="name" label="名称" sortable></el-table-column>
         </el-table>
-      </el-tab-pane>
-  </el-tabs>
-  <!-- 新增码表界面 -->
-  <el-dialog title="新增" width="30%" :visible.sync="codeFormVisible" >
+      </el-col>
+      <el-col :span="12">
+        <el-form @submit.native.prevent :inline="true">
+          <el-form-item>
+            <el-button type="primary" :disabled="code.code === undefined" @click="openItemAdd" size="small">新增</el-button>
+          </el-form-item>
+        </el-form>
+        <el-table :data="items" highlight-current-row border style="width: 100%;">
+          <el-table-column align="center" label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button-group>
+                <el-button type="primary" @click="openItemEdit(scope.$index, scope.row)" size="small" icon="el-icon-edit" ></el-button>
+                <el-button type="danger" @click="removeItem(scope.$index, scope.row)" size="small" icon="el-icon-delete" ></el-button>
+              </el-button-group>
+            </template>
+          </el-table-column>
+          <el-table-column prop="showName" label="名称" width="300">
+          </el-table-column>
+          <el-table-column prop="sort" label="排序" width="100">
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+    <!-- 编辑字典界面 -->
+    <el-dialog title="编辑" width="30%" :visible.sync="codeFormVisible" >
       <el-form :model="code" ref="codeForm" :rules="codeRules">
-          <el-form-item label="编码:" label-width="80px" prop="code">
-              <el-input v-model="code.code" auto-complete="off" style="width:80%" placeholder="编码由字母与下划线组成"></el-input>
-          </el-form-item>
-          <el-form-item label="名称:" label-width="80px" prop="name">
-              <el-input v-model="code.name" auto-complete="off" style="width:80%"></el-input>
-          </el-form-item>
+        <el-form-item label="编码:" label-width="80px" prop="code">
+            <el-input v-model="code.code" auto-complete="off" style="width:80%" placeholder="编码由字母与下划线组成"></el-input>
+        </el-form-item>
+        <el-form-item label="名称:" label-width="80px" prop="name">
+            <el-input v-model="code.name" auto-complete="off" style="width:80%"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-          <el-button @click="cancelCodeForm">取 消</el-button>
-          <el-button type="primary" @click="saveCode">确 定</el-button>
+        <el-button @click="cancelCodeForm">取 消</el-button>
+        <el-button type="primary" @click="saveCode">确 定</el-button>
       </div>
-  </el-dialog>
-  <!-- 编辑项目界面 -->
+    </el-dialog>
+    <!-- 编辑字典项目界面 -->
   <el-dialog :title="itemFormTitle" :visible.sync="itemFormVisible" :close-on-click-modal="false">
       <el-form :model="item" :rules="itemRules" ref="itemForm" label-width="100px">
         <el-row>
@@ -55,7 +64,7 @@
             <el-form-item label="上级分类">
               <el-cascader
                 expand-trigger="hover"
-                :options="codeSelData"
+                :options="pcodes"
                 clearable
                 :props="codeSelProps"
                 v-model="item.path"
@@ -72,8 +81,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="排序">
-              <el-input-number v-model="item.sort" :min="1" :max="99"></el-input-number>
+            <el-form-item label="排序" prop="sort">
+              <el-input-number v-model="item.sort" :min="1" :max="99" controls-position="right"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -83,7 +92,7 @@
           <el-button type="primary" @click="saveItem">确定</el-button>
       </div>
   </el-dialog>
-</div>
+  </div>
 </template>
 
 <script>
@@ -94,6 +103,9 @@ export default {
 
   data() {
     const validateCode = (rule, value, callback) => {
+      if (this.code.code === undefined || this.code.code.trim().length === 0) {
+        return callback(new Error('请输入编码'))
+      }
       // 校验编码格式
       const reg = /^[A-Za-z]+$/
       const codeVal = this.code.code.trim()
@@ -115,9 +127,8 @@ export default {
     }
 
     return {
-      activeTab: '',
-      activeTabIndex: 0,
       codes: [],
+      items: [],
       // ------新增类型------
       codeFormVisible: false,
       code: {},
@@ -137,11 +148,14 @@ export default {
       },
       itemFormVisible: false,
       itemFormTitle: '',
-      codeSelData: [],
       item: {},
+      pcodes: [],
       itemRules: {
         name: [
           { required: true, message: '名称不能为空', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '排序不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -150,9 +164,6 @@ export default {
     loadCode: function() {
       loadCode().then(res => {
         this.codes = res.data
-        if (this.activeTabIndex === 0 && this.codes.length > 0) {
-          this.activeTab = this.codes[0].code
-        }
         this.codes.forEach(code => {
           code.items.forEach(item => {
             let indent = ''
@@ -169,13 +180,24 @@ export default {
         })
       })
     },
-    tabClick: function(tab, event) {
-      this.activeTabIndex = tab.index
-      this.activeTab = tab.name
+    showItem: function(row, event, column) {
+      this.code.code = row.code
+      this.items = row.items
+      this.items.forEach(item => {
+        let indent = ''
+        const depth = this.$store.state.code.codePathMap[item.id].path.length - 1
+        for (let i = 0; i < depth; i++) {
+          indent += '- - '
+        }
+        if (depth > 0) {
+          item.showName = indent + '|- ' + item.name
+        } else {
+          item.showName = item.name
+        }
+      })
     },
     // ------新增类型------
     openCodeAdd: function() {
-      this.code = {}
       this.codeFormVisible = true
     },
     saveCode: function() {
@@ -189,9 +211,8 @@ export default {
             })
             this.$store.dispatch('addCodes')
             this.$store.dispatch('addPathMap')
-            this.$refs.codeForm.resetFields()
             this.refreshCodeStore()
-            this.codeFormVisible = false
+            this.cancelCodeForm()
           })
         }
       })
@@ -207,29 +228,31 @@ export default {
             })
             return
           } else {
-            removeCode(selcode).then(res => {
-              this.$notify({
-                title: SUCCESS_TIP_TITLE,
-                message: REMOVE_SUCCESS,
-                type: 'success'
+            this.$confirm('确实要删除该字典', '提示', { type: 'warning' }).then(() => {
+              removeCode(selcode).then(res => {
+                this.$notify({
+                  title: SUCCESS_TIP_TITLE,
+                  message: REMOVE_SUCCESS,
+                  type: 'success'
+                })
+                this.refreshCodeStore()
               })
-              this.activeTabIndex = 0 // 活动选项卡重置为第一个
-              this.refreshCodeStore()
-            })
+            }).catch(() => {})
           }
         }
       })
     },
     cancelCodeForm: function() {
+      this.code = {}
       this.$refs.codeForm.resetFields()
       this.codeFormVisible = false
     },
-    // ------编辑项目------
+    // ------编辑字典项目------
     openItemAdd: function() {
-      this.item = {}
-      this.codeSelData = this.$store.state.code.codes[this.activeTab]
       this.itemFormTitle = '新增'
       this.itemFormVisible = true
+      this.item.sort = 1
+      this.pcodes = this.$store.state.code.codes[this.code.code] === undefined ? [] : this.$store.state.code.codes[this.code.code]
     },
     openItemEdit: function(index, row) {
       this.item = Object.assign({}, row)
@@ -237,7 +260,7 @@ export default {
       const path = this.$store.state.code.codePathMap[row.id].path
       path.splice(-1, 1)
       this.item.path = path
-      this.codeSelData = this.$store.state.code.codes[this.activeTab]
+      this.pcodes = this.$store.state.code.codes[this.code.code] === undefined ? [] : this.$store.state.code.codes[this.code.code]
       this.itemFormVisible = true
     },
     saveItem: function() {
@@ -248,8 +271,9 @@ export default {
           } else {
             this.item.pid = '0'
           }
-          this.item.type = this.activeTab
+          this.item.type = this.code.code
           if (this.itemFormTitle === '新增') {
+            console.log(JSON.stringify(this.item))
             addItem(this.item).then(res => {
               this.$notify({
                 title: SUCCESS_TIP_TITLE,
@@ -259,6 +283,7 @@ export default {
               this.$store.dispatch('addCodes')
               this.$store.dispatch('addPathMap')
               this.$refs.itemForm.resetFields()
+              this.item = {}
               this.refreshCodeStore()
               this.itemFormVisible = false
             })
@@ -272,6 +297,7 @@ export default {
               this.$store.dispatch('addCodes')
               this.$store.dispatch('addPathMap')
               this.$refs.itemForm.resetFields()
+              this.item = {}
               this.refreshCodeStore()
               this.itemFormVisible = false
             })
@@ -336,10 +362,4 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 12px;
-  }
-</style>
 
