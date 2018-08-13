@@ -34,7 +34,6 @@
 
 <script>
 import { isvalidAccount } from '@/utils/validate'
-
 export default {
   data() {
     const validateAccount = (rule, value, callback) => {
