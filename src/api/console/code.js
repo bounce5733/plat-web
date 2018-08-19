@@ -55,7 +55,7 @@ export function editItem(data) {
 
 export function removeItem(id) {
   return request({
-    url: CONSOLE_API_BASE + '/codes/item' + id,
+    url: CONSOLE_API_BASE + '/codes/item/' + id,
     method: 'delete'
   })
 }

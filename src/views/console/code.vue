@@ -25,7 +25,7 @@
             <el-button type="primary" :disabled="code.code === undefined" @click="openItemAdd" size="small">新增</el-button>
           </el-form-item>
         </el-form>
-        <el-table :data="items" highlight-current-row border style="width: 100%;">
+        <el-table :data="code.items" highlight-current-row border style="width: 100%;">
           <el-table-column align="center" label="操作" width="120">
             <template slot-scope="scope">
               <el-button-group>
@@ -128,10 +128,9 @@ export default {
 
     return {
       codes: [],
-      items: [],
+      code: {}, // 当前选中字典
       // ------新增类型------
       codeFormVisible: false,
-      code: {},
       codeRules: {
         code: [
           { required: true, trigger: 'blur', validator: validateCode }
@@ -164,7 +163,11 @@ export default {
     loadCode: function() {
       loadCode().then(res => {
         this.codes = res.data
+        this.code = this.code.code === undefined ? this.codes[0] : this.code
         this.codes.forEach(code => {
+          if (this.code.code === code.code) {
+            this.code = code
+          }
           code.items.forEach(item => {
             let indent = ''
             const depth = this.$store.state.code.codePathMap[item.id].path.length - 1
@@ -181,9 +184,8 @@ export default {
       })
     },
     showItem: function(row, event, column) {
-      this.code.code = row.code
-      this.items = row.items
-      this.items.forEach(item => {
+      this.code = row
+      this.code.items.forEach(item => {
         let indent = ''
         const depth = this.$store.state.code.codePathMap[item.id].path.length - 1
         for (let i = 0; i < depth; i++) {
@@ -198,6 +200,7 @@ export default {
     },
     // ------新增类型------
     openCodeAdd: function() {
+      this.code = {}
       this.codeFormVisible = true
     },
     saveCode: function() {
@@ -209,8 +212,6 @@ export default {
               message: SAVE_SUCCESS,
               type: 'success'
             })
-            this.$store.dispatch('addCodes')
-            this.$store.dispatch('addPathMap')
             this.refreshCodeStore()
             this.cancelCodeForm()
           })
@@ -235,6 +236,7 @@ export default {
                   message: REMOVE_SUCCESS,
                   type: 'success'
                 })
+                this.code = {}
                 this.refreshCodeStore()
               })
             }).catch(() => {})
@@ -273,15 +275,12 @@ export default {
           }
           this.item.type = this.code.code
           if (this.itemFormTitle === '新增') {
-            console.log(JSON.stringify(this.item))
             addItem(this.item).then(res => {
               this.$notify({
                 title: SUCCESS_TIP_TITLE,
                 message: SAVE_SUCCESS,
                 type: 'success'
               })
-              this.$store.dispatch('addCodes')
-              this.$store.dispatch('addPathMap')
               this.$refs.itemForm.resetFields()
               this.item = {}
               this.refreshCodeStore()
@@ -294,8 +293,6 @@ export default {
                 message: EDIT_SUCCESS,
                 type: 'success'
               })
-              this.$store.dispatch('addCodes')
-              this.$store.dispatch('addPathMap')
               this.$refs.itemForm.resetFields()
               this.item = {}
               this.refreshCodeStore()
@@ -344,6 +341,7 @@ export default {
     },
     cancelItemForm: function() {
       this.$refs.itemForm.resetFields()
+      this.item = {}
       this.itemFormVisible = false
     },
     refreshCodeStore: function() {
