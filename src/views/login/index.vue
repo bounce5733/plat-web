@@ -2,47 +2,40 @@
   <div class="login-container">
     <div class="header">
       <div class="header-wrap">
-        <h1 class="header-logo"><a href="https://bing.com">工具平台</a></h1>
+        <h1 class="header-logo"><a href="#">工具平台</a></h1>
       </div>
     </div>
     <div class="main">
       <div class="link-con">
-        <a target="_blank" style="background: url(/static/login-main.png) center right no-repeat;" href="https://www.bing.com">
+        <a target="_blank" :style="{background:linkComBackgroundSize}" href="#">
         </a>
       </div>
       <div class="form-con">
         <div class="my-form">
-          <form id="myForm" autocomplete="off">
+          <el-form :model="loginForm" :rules="loginRules" ref="loginForm" autocomplete="off">
             <input style="display:none" type="text" name="fakeusernameremembered"/>
             <input style="display:none" type="password" name="fakepasswordremembered"/>
             <div class="control-box">
               <div class="warn" id="warn">
-                
               </div>
-              <div class="control-form">
-                <input type="text" name="username" id="username" tabIndex="1" class="ui-input" placeholder="请输入手机号码/用户名" autocomplete="off">
-              </div>
-              <div class="control-form">
-                <input type="password" name="password" id="password" tabIndex="2" class="ui-input" placeholder="请输入密码" autocomplete="off">
-              </div>
-              <div class="control-form dn">
-                <input type="text" class="ui-input verifyCode" id="verifyCode" name="verifyCode" placeholder="请输入右侧图片"  autocomplete="off"/>
-                <img src="" title="点击刷新图片" height="40" width="105" class="auth-image" />
-              </div>
-
-
+              <el-form-item class="control-form" prop="account">
+                <input type="text" v-model="loginForm.account" tabIndex="1" class="ui-input" placeholder="请输入手机号码/用户名" autocomplete="off">
+              </el-form-item>
+              <el-form-item  class="control-form" prop="password">
+                <input type="password" v-model="loginForm.password" @keyup.enter="handleLogin" tabIndex="2" class="ui-input" placeholder="请输入密码" autocomplete="off">
+              </el-form-item >
               <div class="control-form o-form">
-                <label class="remember-name"><input type="checkbox" tabIndex="3" name="rememberName" value="1" /><span>记住用户名</span></label>
-                <a class="forget-pwd" href="https://sso.dinghuo123.com/user/password_retrieve">忘记密码？</a>
+                <label><input type="checkbox" tabIndex="3" name="rememberName" value="1" /><span>记住用户名</span></label>
+                <a class="forget-pwd" href="#">忘记密码？</a>
               </div>
               <div class="control-form">
-                <input type="button" id="loginBtn" class="ui-btn ui-btn-blue" tabIndex="4" value="登录">
+                <input type="button" @click="handleLogin" class="ui-btn ui-btn-blue" tabIndex="4" value="登录">
               </div>
             </div>
-          </form>
+          </el-form>
           <div class="down-con">
-            <a class="down-a" href="https://www.dinghuo123.com/product/dinghuo.html#download"><em class="ui-icon-phone"></em>手机下载</a>
-            <a class="register-a" href="https://sso.dinghuo123.com/apply/apply"><em class="ui-icon-register"></em>注册</a>
+            <a class="down-a" href="#"><em class="ui-icon-phone"></em>手机下载</a>
+            <a class="register-a" href="#"><em class="ui-icon-register"></em>注册</a>
           </div>
         </div>
       </div>
@@ -69,16 +62,15 @@ export default {
       }
     }
     return {
+      linkComBackgroundSize: document.body.clientHeight < 800 ? 'url(/static/login-main.png) center right / 70% no-repeat' : 'url(/static/login-main.png) center right / 70% no-repeat',
       loginForm: {
-        account: 'admin',
-        password: '123'
+        account: '',
+        password: ''
       },
       loginRules: {
         account: [{ required: true, trigger: 'blur', validator: validateAccount }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
-      passwordType: 'password',
-      loading: false
+      }
     }
   },
   methods: {
@@ -97,13 +89,6 @@ export default {
           return false
         }
       })
-    },
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
     }
   }
 }
@@ -323,11 +308,25 @@ button, input, select, textarea { /* for ie */
 .control-box .control-form{
 	margin-bottom:18px;
 }
-
-.auth-image{
-	position: absolute;
-  right: 1px;
-  top: 1px;
-  height: 40px;
+/*begin ui*/
+.ui-dialog-header{border-bottom:none;}
+.ui-icon-phone,.ui-icon-register,.ui-icon-show,.ui-icon-hide{
+	display: inline-block;
+	vertical-align: middle;
+	width: 20px;
+	height: 20px;
+	background: url(/static/login-icon.png) no-repeat;
+}
+.ui-icon-phone{
+	background-position: 0 0;
+}
+.ui-icon-register{
+	background-position: -20px 0;
+}
+.ui-icon-show{
+	background-position: -60px 0;
+}
+.ui-icon-hide{
+	background-position: -60px 0;
 }
 </style>

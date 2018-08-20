@@ -1,10 +1,10 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div class="app-container">
     <el-row>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" @submit.native.prevent>
           <el-form-item>
-            <el-button type="primary" @click="openAdd" size="small" icon="el-icon-plus">新增</el-button>
+            <el-button type="primary" @click="openAdd" size="small">新增</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -358,9 +358,3 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 12px;
-  }
-</style>

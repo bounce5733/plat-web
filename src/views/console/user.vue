@@ -1,19 +1,12 @@
 <template>
-  <div class="dashboard-editor-container">
-    <el-container style="height: 500px;">
-      <el-container style="border: 1px solid #eee;">
-        <el-header style="font-size: 12px;">
-          <el-row>
-            <el-col :span="12">
-              <span>用户列表</span>
-            </el-col>
-            <el-col :span="12" style="text-align: right">
-              <el-button type="primary" size="small" @click="openAdd" icon="el-icon-plus"></el-button>
-            </el-col>
-          </el-row>
-        </el-header>
-        
-        <el-main>
+  <div class="app-container">
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-form @submit.native.prevent :inline="true">
+            <el-form-item>
+              <el-button type="primary" size="small" @click="openAdd">新增</el-button>
+            </el-form-item>
+          </el-form>
           <el-table :data="users" @row-click="selUser" style="width: 100%;">
             <el-table-column label="操作" width="120">
               <template slot-scope="scope">
@@ -23,24 +16,22 @@
                 </el-button-group>
               </template>
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="160" sortable>
-            </el-table-column>
-            <el-table-column prop="account" label="账号" sortable>
-            </el-table-column>
+            <el-table-column prop="name" label="姓名" width="160" sortable></el-table-column>
+            <el-table-column prop="account" label="账号" sortable></el-table-column>
           </el-table>
-        </el-main>
-      </el-container>
-      <el-aside width="400px" style="border: 1px solid #eee;">
+      </el-col>
+      <el-col :span="12">
         <el-container>
-          <el-header style="text-align: left; font-size: 12px;">
+          <el-header style="text-align:left; font-size:12px; border-width: 1px; border-style:solid; color:#333; line-height:60px;">
             <span>{{curUserName}}权限</span>
           </el-header>
-          <el-main>
+          <br>
+          <el-main style="border-width: 1px; border-style:solid;">
             <el-tree class="menutree" :data="menus" :props="menuTreeProps" default-expand-all show-checkbox node-key="name" highlight-current ref="menuTree"></el-tree>
           </el-main>
         </el-container>
-      </el-aside>
-    </el-container>
+      </el-col>
+    </el-row>
 
     <!--编辑用户-->
     <el-dialog :title="formTitle" :close-on-click-modal="false" :visible.sync="formVisible">
@@ -244,15 +235,4 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 12px;
-  }
-  .el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
-  }
-</style>
 
