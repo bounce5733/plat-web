@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div class="app-container">
     <el-row>
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" @submit.native.prevent>
@@ -358,9 +358,3 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 12px;
-  }
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div class="app-container">
     <el-container style="height: 500px;">
       <el-container style="border: 1px solid #eee;">
         <el-header style="font-size: 12px;">
@@ -244,15 +244,3 @@ export default {
   }
 }
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 12px;
-  }
-  .el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
-  }
-</style>
-
