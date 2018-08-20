@@ -1,21 +1,5 @@
 <template>
   <div class="app-container">
-<<<<<<< HEAD
-    <el-container style="height: 500px;">
-      <el-container style="border: 1px solid #eee;">
-        <el-header style="font-size: 12px;">
-          <el-row>
-            <el-col :span="12">
-              <span>用户列表</span>
-            </el-col>
-            <el-col :span="12" style="text-align: right">
-              <el-button type="primary" size="small" @click="openAdd" icon="el-icon-plus"></el-button>
-            </el-col>
-          </el-row>
-        </el-header>
-        
-        <el-main>
-=======
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form @submit.native.prevent :inline="true">
@@ -23,7 +7,6 @@
               <el-button type="primary" size="small" @click="openAdd">新增</el-button>
             </el-form-item>
           </el-form>
->>>>>>> 5288824f7312ec9eaea51bc7b21614ccc1412fb3
           <el-table :data="users" @row-click="selUser" style="width: 100%;">
             <el-table-column label="操作" width="120">
               <template slot-scope="scope">
@@ -251,9 +234,5 @@ export default {
     this.load()
   }
 }
-<<<<<<< HEAD
-</script>
-=======
 </script>
 
->>>>>>> 5288824f7312ec9eaea51bc7b21614ccc1412fb3

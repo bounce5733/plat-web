@@ -1,14 +1,8 @@
 <template>
   <div class="login-container">
-<<<<<<< HEAD
-    <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <div class="title-container">
-        <h3 class="title">系统平台</h3>
-=======
     <div class="header">
       <div class="header-wrap">
         <h1 class="header-logo"><a href="#">工具平台</a></h1>
->>>>>>> 5288824f7312ec9eaea51bc7b21614ccc1412fb3
       </div>
     </div>
     <div class="main">
