@@ -51,6 +51,25 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
+    path: '/component',
+    component: Layout,
+    redirect: '/component/table',
+    name: 'component',
+    meta: { title: '组件', icon: 'component' },
+    children: [{
+      path: '/component/table',
+      component: _import('component/Layout'),
+      name: 'component_table',
+      meta: { title: '表格', icon: 'component', noCache: true },
+      children: [{
+        path: 'edit',
+        component: _import('component/table/EditTable'),
+        name: 'component_table_EditTable',
+        meta: { title: '编辑表格', icon: 'component', noCache: true }
+      }]
+    }]
+  },
+  {
     path: '/console',
     component: Layout,
     redirect: '/console/user',

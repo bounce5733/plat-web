@@ -1,6 +1,7 @@
 import { loginByAccount, logout } from '@/api/console/login'
 import { getUserInfo } from '@/api/console/user'
 import { TOKEN_KEY } from '@/utils/constant'
+import md5 from 'js-md5'
 
 const user = {
   state: {
@@ -23,7 +24,7 @@ const user = {
     loginByAccount({ commit }, userInfo) {
       const account = userInfo.account.trim()
       return new Promise((resolve, reject) => {
-        loginByAccount(account, userInfo.password).then(response => {
+        loginByAccount(account.trim(), md5(userInfo.password.trim())).then(response => {
           sessionStorage.setItem(TOKEN_KEY, response.data)
           resolve()
         }).catch(error => {
